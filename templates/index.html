@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChatBox</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">💬 Chat with AI</div>
+    <div id="chat-box" class="chat-box"></div>
+
+  <div class="chat-input">
+  <input id="user-input" type="text" placeholder="Type your message..." />
+  <button onclick="sendMessage()">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="22px" height="22px">
+      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+    </svg>
+  </button>
+</div>
+
+
+  <script>
+    async function sendMessage() {
+      let input = document.getElementById('user-input');
+      let message = input.value.trim();
+      if (message === '') return;
+
+      let chatBox = document.getElementById('chat-box');
+      chatBox.innerHTML += `<div class='user'>🧍‍♀️ ${message}</div>`;
+      input.value = '';
+
+      const res = await fetch('/chat', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({message})
+      });
+      const data = await res.json();
+      chatBox.innerHTML += `<div class='bot'>🤖 ${data.reply}</div>`;
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>
