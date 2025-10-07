@@ -53,8 +53,7 @@ body {
 /* chat area background (pattern like WhatsApp) */
 .chat-box {
   flex: 1;
-  background: url('https://i.imgur.com/wr7Su0y.png');
-  background-size: cover;
+  background: #f9f9f9; /* off-white background */
   padding: 15px;
   overflow-y: auto;
   display: flex;
@@ -175,3 +174,4 @@ body {
   0% { opacity: 0; transform: translateY(10px) scale(0.95); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
+
