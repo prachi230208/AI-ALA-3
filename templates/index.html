@@ -1,45 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ChatBox</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Chatbot</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="chat-container">
-    <div class="chat-header">💬 Chat with AI</div>
-    <div id="chat-box" class="chat-box"></div>
 
+<div class="chat-container">
+  <div class="chat-header">ProBot Chatbot</div>
+  <div class="chat-body" id="chat-body"></div>
   <div class="chat-input">
-  <input id="user-input" type="text" placeholder="Type your message..." />
-  <button onclick="sendMessage()">
-    <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" width="22px" height="22px">
-      <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
-    </svg>
-  </button>
+    <input type="text" id="user-input" placeholder="Type a message...">
+    <button onclick="sendMessage()">Send</button>
+  </div>
 </div>
 
+<script>
+async function sendMessage() {
+    let inputBox = document.getElementById('user-input');
+    let userMessage = inputBox.value.trim();
+    if (!userMessage) return;
 
-  <script>
-    async function sendMessage() {
-      let input = document.getElementById('user-input');
-      let message = input.value.trim();
-      if (message === '') return;
+    appendMessage(userMessage, 'user');
+    inputBox.value = '';
 
-      let chatBox = document.getElementById('chat-box');
-      chatBox.innerHTML += `<div class='user'>🧍‍♀️ ${message}</div>`;
-      input.value = '';
+    let response = await fetch("/get_response", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userMessage })
+    });
+    let data = await response.json();
+    appendMessage(data.response, 'bot');
+}
 
-      const res = await fetch('/chat', {
-        method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({message})
-      });
-      const data = await res.json();
-      chatBox.innerHTML += `<div class='bot'>🤖 ${data.reply}</div>`;
-      chatBox.scrollTop = chatBox.scrollHeight;
+// Function to display messages
+function appendMessage(message, sender) {
+    let chatBody = document.getElementById('chat-body');
+    let msgDiv = document.createElement('div');
+    msgDiv.classList.add('message', sender === 'bot' ? 'bot-message' : 'user-message');
+
+    let msgContent = document.createElement('div');
+    msgContent.classList.add('message-content');
+    msgContent.innerText = message;
+
+    msgDiv.appendChild(msgContent);
+    chatBody.appendChild(msgDiv);
+    chatBody.scrollTop = chatBody.scrollHeight;
+}
+
+// **Send message on Enter key**
+document.getElementById('user-input').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
     }
-  </script>
+});
+</script>
+
 </body>
 </html>
+
