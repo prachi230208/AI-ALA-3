@@ -9,8 +9,19 @@
 <body>
 
 <div class="chat-container">
-  <div class="chat-header">ProBot Chatbot</div>
+  <div class="chat-header"> ProBot Chatbot</div>
+  
   <div class="chat-body" id="chat-body"></div>
+
+  <!-- Suggested Questions Section -->
+  <div class="suggested-questions">
+    <button onclick="useSuggestion('What is AI?')">What is AI?</button>
+    <button onclick="useSuggestion('Tell me about Python')">Tell me about Python</button>
+    <button onclick="useSuggestion('What is web development?')">What is web development?</button>
+    <button onclick="useSuggestion('Give me project ideas')">Give me project ideas</button>
+    <button onclick="useSuggestion('What are career options in IT?')">Career options in IT?</button>
+  </div>
+
   <div class="chat-input">
     <input type="text" id="user-input" placeholder="Type a message...">
     <button onclick="sendMessage()">Send</button>
@@ -35,7 +46,7 @@ async function sendMessage() {
     appendMessage(data.response, 'bot');
 }
 
-// Function to display messages
+// Append message function
 function appendMessage(message, sender) {
     let chatBody = document.getElementById('chat-body');
     let msgDiv = document.createElement('div');
@@ -50,12 +61,16 @@ function appendMessage(message, sender) {
     chatBody.scrollTop = chatBody.scrollHeight;
 }
 
-// **Send message on Enter key**
+// Handle Enter key
 document.getElementById('user-input').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
+    if (e.key === 'Enter') sendMessage();
 });
+
+// Suggested Question Click
+function useSuggestion(text) {
+    document.getElementById('user-input').value = text;
+    sendMessage();
+}
 </script>
 
 </body>
